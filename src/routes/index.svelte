@@ -104,7 +104,7 @@
       >
         <img
           class='w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:right-0 lg:h-full lg:w-auto lg:max-w-none'
-          src='https://i.ibb.co/GWYsfq6/Screenshot-2022-04-16-at-12-22-27.png'
+          src='https://i.ibb.co/pPCjPtk/glenn-carstens-peters-RLw-UC03-Gwc-unsplash.jpg'
           alt='Customer profile user interface'
         />
       </div>
