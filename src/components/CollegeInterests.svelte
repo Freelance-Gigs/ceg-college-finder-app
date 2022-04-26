@@ -5,7 +5,7 @@
   import Button from './UI/Button.svelte';
   import { getContext } from 'svelte';
   import { STEPS } from './UI/Steps.svelte';
-  import { interests } from '../stores/interests.ts';
+  import { interests } from '../stores/interests';
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
 
   const { nextStep } = getContext(STEPS);

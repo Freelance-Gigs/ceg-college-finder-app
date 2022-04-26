@@ -1,6 +1,6 @@
 <script>
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
-  import { collegesMatchingInterests, collegesMatchingState } from '../stores/collegeList.js';
+  import { collegesMatchingInterests, collegesMatchingState } from '../stores/collegeList';
   import { onMount } from 'svelte';
   import { flatten } from 'lodash';
   import { frequencies } from 'underscore-contrib';
@@ -25,7 +25,6 @@
     rowsPerPage: 20,
     columnFilter: true,
     blocks: {
-      // searchInput: false,
       paginationButtons: true,
       paginationRowCount: true,
     },
