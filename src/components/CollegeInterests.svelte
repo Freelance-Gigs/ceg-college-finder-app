@@ -1,12 +1,11 @@
 <script lang='ts'>
   import { COLLEGE_INTERESTS_TABLE } from '../api/airtable';
   import { Records } from 'airtable';
-  import { SyncLoader } from 'svelte-loading-spinners';
   import Checkbox from 'svelte-checkbox';
   import Button from './UI/Button.svelte';
   import { getContext } from 'svelte';
   import { STEPS } from './UI/Steps.svelte';
-  import { interests } from '../stores/interests.js';
+  import { interests } from '../stores/interests.ts';
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
 
   const { nextStep } = getContext(STEPS);
