@@ -71,7 +71,6 @@
       items: GPA,
       label: 'What’s your GPA?',
       placeholder: 'Select GPA',
-      value: '4.0+',
     },
     {
       id: v4(),
@@ -79,7 +78,6 @@
       items: FAMILY_AFFORDABILITY,
       label: 'How much can your family afford for college?',
       placeholder: 'Select amount',
-      value: '$0-$10k',
     },
   ];
 </script>
