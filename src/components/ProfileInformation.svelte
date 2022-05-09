@@ -1,7 +1,7 @@
 <script lang='ts'>
   import states from 'states-us';
   import Select from 'svelte-select';
-  import { v4 } from 'uuid';
+  // import { v4 } from 'uuid';
   import Button from './UI/Button.svelte';
   import { getContext } from 'svelte';
   import { STEPS } from './UI/Steps.svelte';
@@ -58,7 +58,7 @@
 
   const INPUTS = [
     {
-      id: v4(),
+      id: 1,
       name: 'state',
       items: STATES,
       label: 'Which state do you live in?',
@@ -66,14 +66,14 @@
       value: $state,
     },
     {
-      id: v4(),
+      id: 2,
       name: 'GPA',
       items: GPA,
       label: 'What’s your GPA?',
       placeholder: 'Select GPA',
     },
     {
-      id: v4(),
+      id: 3,
       name: 'affordability',
       items: FAMILY_AFFORDABILITY,
       label: 'How much can your family afford for college?',
