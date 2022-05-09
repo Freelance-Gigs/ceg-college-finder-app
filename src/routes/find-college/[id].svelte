@@ -1,5 +1,6 @@
 <script>
   import CollegeInterests from '../../components/CollegeInterests.svelte';
+  import ProfileInformation from '../../components/ProfileInformation.svelte';
   import StepsCard from '../../components/UI/StepsCard.svelte';
   import CollegeList from '../../components/CollegeList.svelte';
 
@@ -9,6 +10,12 @@
       number: '1',
       title: 'College Interests',
       component: CollegeInterests,
+    },
+    {
+      id: 'profile',
+      number: '2',
+      title: 'Profile Information',
+      component: ProfileInformation,
     },
     {
       id: 'list',
