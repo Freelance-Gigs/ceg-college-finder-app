@@ -41,6 +41,7 @@
     "lodash": "^4.17.21",
     "states-us": "^1.0.1",
     "svelte-select": "^4.4.7",
+    "svelte-table": "^0.3.4",
     "underscore-contrib": "^0.2.2",
     "uuid": "^8.3.2"
   }

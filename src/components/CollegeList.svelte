@@ -2,15 +2,14 @@
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
   import { collegesMatchingInterests, collegesMatchingState } from '../stores/collegeList';
   import { onMount } from 'svelte';
-  import { flatten } from 'lodash';
+  import {flatten, orderBy} from 'lodash';
   import { frequencies } from 'underscore-contrib';
-  import { Datatable } from 'svelte-simple-datatables';
+  import SvelteTable from "svelte-table";
   import Button from './UI/Button.svelte';
   import { goto } from '$app/navigation';
 
   let loading = true;
   let colleges = [];
-  let rows;
 
   onMount(async () => {
     const interests = await $collegesMatchingInterests;
@@ -19,59 +18,94 @@
     loading = false;
   });
 
-  const settings = {
-    sortable: true,
-    pagination: true,
-    rowsPerPage: 20,
-    columnFilter: true,
-    blocks: {
-      paginationButtons: true,
-      paginationRowCount: true,
+  const columns = [
+    {
+      key: "index",
+      title: "#",
+      value: v => v.index,
+      sortable: true,
     },
-  };
+    {
+      key: "colleges",
+      title: "Colleges",
+      value: v => v.colleges,
+      sortable: true,
+    },
+    {
+      key: "num_of_lists",
+      title: "# of lists",
+      value: v => v.num_of_lists,
+      sortable: true,
+      headerClass: "text-left",
+    }
+  ];
 
   $: collegesMap = frequencies(colleges);
   $: data = Object.keys(collegesMap).map((key) => ({
     colleges: key,
     num_of_lists: collegesMap[key],
   }));
-
+  $: rows = orderBy(data, ['num_of_lists'], ['desc']).map((row, index) => ({
+    index: index + 1,
+    ...row
+  }))
 </script>
 
 <main>
   <h2 class='text-3xl text-center font-extrabold tracking-tight text-gray-900 my-8'>
     Learn which colleges rate highly based on your interests
   </h2>
-
-
+  
   {#if loading}
     <LoadingSpinner />
   {:else}
-    <div class='w-1/2 h-12 text-left m-auto bg-gray-300 shadow-2xl border-amber-200 mb-6'>
-      <Datatable {settings} {data} bind:dataRows={rows}>
-        <thead>
-        <th data-key='colleges'>Colleges</th>
-        <th data-key='num_of_lists'># of lists</th>
-        </thead>
-        <tbody>
-        {#if rows}
-          {#each $rows as { colleges, num_of_lists }}
-            <tr class='first:shadow-lg even:bg-gray-100'>
-              <td>{colleges}</td>
-              <td>{num_of_lists}</td>
-            </tr>
-          {/each}
-        {/if}
-        </tbody>
-      </Datatable>
-    </div>
-
+    <section class="w-1/2 overflow-auto m-6 mx-auto p-0 bg-white shadow-2xl rounded-md">
+      <SvelteTable sortBy="num_of_lists" sortOrder="-1" {columns} {rows} />
+    </section>
     <div class='flex mx-6'>
       <Button on:click={() => goto('/')}>
         Start again
       </Button>
     </div>
-
   {/if}
 </main>
 
+
+<style>
+  section {
+    max-height: 36rem;
+  }
+
+  :global(th){
+    padding: 0.75rem;
+    background-color: #6B7280;
+    color: #ffffff;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-color: #ffffff;
+    text-transform: capitalize;
+    z-index: 30;
+    top: 0;
+    position: sticky;
+  }
+
+  :global(td){
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    text-align: center;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-color: #000000;
+    font-size: 1em;
+  }
+
+  :global(table) {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  :global(tr:nth-of-type(2n)){
+    background-color: rgb(243, 244, 246);
+  }
+
+</style>
