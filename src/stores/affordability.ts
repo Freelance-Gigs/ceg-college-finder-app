@@ -2,10 +2,7 @@ import {writable} from "svelte/store";
 import type {ProfileInfo} from "../types/profileInfo";
 
 
-export const affordability = writable<ProfileInfo>({
-    value: "wealthy",
-    label: "$40K+"
-});
+export const affordability = writable<ProfileInfo>({});
 
 export const FAMILY_AFFORDABILITY = [
     {

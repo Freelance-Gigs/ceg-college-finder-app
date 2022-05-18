@@ -5,11 +5,7 @@ import type {ProfileInfo} from "../types/profileInfo";
 import {v4} from "uuid";
 import states from "states-us";
 
-export const state = writable<ProfileInfo>({
-    id: "7722ed69-52e9-496f-8b86-1439c39d5220",
-    value: "AK",
-    label: "AK - Alaska"
-});
+export const state = writable<ProfileInfo>({});
 
 export const STATES = states.map(({ abbreviation, name }) => ({
     id: v4(),

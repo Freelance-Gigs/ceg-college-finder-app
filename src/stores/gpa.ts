@@ -3,11 +3,7 @@ import type {ProfileInfo} from "../types/profileInfo";
 import {v4} from "uuid";
 
 
-export const gpa = writable<ProfileInfo>({
-    id: "a5eaeb0d-b644-4f37-919d-822566e42f13",
-    value: "awesome",
-    label: "3.5-4.0"
-});
+export const gpa = writable<ProfileInfo>({});
 
 
 export const GPA = [
