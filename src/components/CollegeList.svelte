@@ -23,7 +23,12 @@
       title: "Colleges",
       value: v => {
         const name = v.colleges
-        const src = $collegesMap?.name['collegeExpressUrl'] || "#"
+        const collegeObject = $collegesMap[name]
+
+        if(!collegeObject){
+          return name
+        }
+        const src = collegeObject['collegeExpressUrl'] || "#"
        return `<a href='${src}' target="_blank">${name}</a>`
       },
       sortable: true,
