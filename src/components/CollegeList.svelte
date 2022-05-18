@@ -1,20 +1,23 @@
 <script>
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
-  import { collegesMatchingInterests, collegesMatchingState } from '../stores/collegeList';
-  import { onMount } from 'svelte';
-  import {flatten, orderBy} from 'lodash';
-  import { frequencies } from 'underscore-contrib';
+  import {onMount} from 'svelte';
+  import {orderBy} from 'lodash';
+  import {frequencies} from 'underscore-contrib';
   import SvelteTable from "svelte-table";
   import Button from './UI/Button.svelte';
-  import { goto } from '$app/navigation';
+  import {goto} from '$app/navigation';
+  import {collegesMatchingState, loadCollegesMatchingState, state} from "../stores/state";
+  import {loadCollegesMatchingInterests, interests, collegesMatchingInterests} from "../stores/interests";
 
   let loading = true;
   let colleges = [];
 
   onMount(async () => {
-    const interests = await $collegesMatchingInterests;
-    const states = await $collegesMatchingState;
-    colleges = flatten([states, ...interests]);
+    await loadCollegesMatchingState($state)
+    await loadCollegesMatchingInterests($interests)
+
+    colleges = [...$collegesMatchingState, ...$collegesMatchingInterests];
+    console.log(colleges)
     loading = false;
   });
 
@@ -55,7 +58,7 @@
   <h2 class='text-3xl text-center font-extrabold tracking-tight text-gray-900 my-8'>
     Learn which colleges rate highly based on your interests
   </h2>
-  
+
   {#if loading}
     <LoadingSpinner />
   {:else}
@@ -78,7 +81,7 @@
 
   :global(th){
     padding: 0.75rem;
-    background-color: #6B7280;
+    background-color: #000;
     color: #ffffff;
     border-right-width: 1px;
     border-bottom-width: 1px;

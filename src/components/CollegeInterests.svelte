@@ -9,7 +9,7 @@
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
 
   const { nextStep } = getContext(STEPS);
-  const fetchInterests: Promise<Records<any>> = COLLEGE_INTERESTS_TABLE.select({
+  const fetchInterests: Promise<Records<TFields>> = COLLEGE_INTERESTS_TABLE.select({
     fields: ['List Name'],
     sort: [{ field: 'List Name', direction: 'asc' }],
   }).firstPage();
