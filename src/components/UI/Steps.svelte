@@ -26,6 +26,13 @@
 
       goto(id);
     },
+    prevStep: () => {
+      const index = $steps.indexOf($current);
+      const nextIndex = Math.max(index - 1, 0);
+      const { id } = $steps[nextIndex];
+
+      goto(id);
+    },
     current,
     steps,
   });

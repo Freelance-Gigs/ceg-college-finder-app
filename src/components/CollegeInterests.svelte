@@ -9,8 +9,9 @@
   import { STEPS } from './UI/Steps.svelte';
   import { interests, loadCollegesMatchingInterests } from '../stores/interests';
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
+  import {goto} from "$app/navigation";
 
-  const { nextStep } = getContext(STEPS);
+  const { nextStep, prevStep } = getContext(STEPS);
   // @ts-ignore
   const fetchInterests: Promise<Records<TFields>> = COLLEGE_INTERESTS_TABLE.select({
     fields: ['List Name'],
@@ -47,7 +48,11 @@
         </div>
       {/each}
     </div>
-    <div class='flex flex-row-reverse mx-6 mb-6'>
+
+    <div class='flex justify-between gap-2 mx-6 mb-6'>
+      <Button secondary on:click={() => goto('/')}>
+        Prev step
+      </Button>
       <Button on:click={async () => {
         await loadCollegesMatchingInterests($interests)
         nextStep()

@@ -9,7 +9,7 @@
     import {GPA, gpa} from "../stores/gpa";
     import {affordability, FAMILY_AFFORDABILITY} from "../stores/affordability";
 
-    const { nextStep } = getContext(STEPS);
+    const { nextStep, prevStep } = getContext(STEPS);
 
     const INPUTS = [
         {
@@ -66,16 +66,18 @@
                 />
             </div>
         {/each}
-    </section>
-
-    <div class='flex flex-row-reverse mx-6 mb-6'>
-        <Button on:click={async () => {
+        <div class='flex gap-2  mx-auto mb-6 text-center '>
+            <Button secondary :click={prevStep}>
+                Prev step
+            </Button>
+            <Button on:click={async () => {
             await loadCollegesMatchingState($state.value)
             nextStep()
         }}>
-            Next step
-        </Button>
-    </div>
+                Next step
+            </Button>
+        </div>
+    </section>
 
 </main>
 

@@ -17,4 +17,4 @@
 
 <Header />
 <slot />
-<!--<Footer />-->
+<Footer />
