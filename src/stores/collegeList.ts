@@ -65,10 +65,11 @@ export const combinedList = derived([collegesMatchingState, collegesMatchingInte
 })
 
 export const collegesMap = derived([initialColleges, state, gpa, affordability],
-    ([$initialColleges, $state, $gpa, $affordability]): CollegesMap[] => {
+    ([$initialColleges, $state, $gpa, $affordability]): CollegesMap => {
 
-    return $initialColleges.map((college) => {
-        const {name, type, state, acceptance = 0} = college
+    // @ts-ignore
+        return $initialColleges.reduce((previousValue,currentValue) => {
+        const {name, type, state, acceptance = 0} = currentValue
 
         let color: 'red' | 'yellow' | 'green'= 'yellow';
 
@@ -126,10 +127,11 @@ export const collegesMap = derived([initialColleges, state, gpa, affordability],
         }
 
         return {
+            ...previousValue,
             [name as string]: {
                 color,
-                ...college
+                ...currentValue
             }
         }
-    })
+    }, {})
     })
