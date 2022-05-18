@@ -6,12 +6,22 @@ export const state = writable<String>('NY');
 export const collegesMatchingState = writable<AirtableField[]>([])
 
 export const loadCollegesMatchingState = async (state: string): Promise<void> => {
-    const records = await COLLEGE_DETAILS_TABLE.select({
+    let colleges: AirtableField[] = []
+
+    const records = COLLEGE_DETAILS_TABLE.select({
         fields: ['University Name and State'],
         filterByFormula: `State="${state}"`
-    }).firstPage();
+    }).eachPage(function page(records, fetchNextPage) {
+        const fetched = records.map(({fields}): AirtableField => fields['University Name and State']);
+        colleges = colleges.concat(fetched);
+        fetchNextPage();
 
-    const colleges = records.map(({fields}): AirtableField => fields['University Name and State'],
-    )
-    collegesMatchingState.set(colleges)
+    }, function done(err) {
+        console.log('state', colleges)
+        collegesMatchingState.set(colleges);
+        if (err) {
+            console.error(err);
+            return;
+        }
+    });
 }

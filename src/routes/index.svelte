@@ -4,6 +4,11 @@
   import Check from '../icons/Check.svelte';
   import Line from '../components/UI/Line.svelte';
   import { goto } from '$app/navigation';
+  import {onMount} from "svelte";
+  import {collegesMap, loadAllColleges} from "../stores/collegeList";
+
+  onMount(loadAllColleges)
+
 </script>
 
 <section class='my-24'>

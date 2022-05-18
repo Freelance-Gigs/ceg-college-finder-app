@@ -6,6 +6,8 @@
     import { getContext } from 'svelte';
     import { STEPS } from './UI/Steps.svelte';
     import { state } from '../stores/state';
+    import {gpa} from "../stores/gpa";
+    import {affordability} from "../stores/affordability";
 
     const { nextStep } = getContext(STEPS);
 
@@ -18,46 +20,46 @@
     const GPA = [
         {
             id: v4(),
-            value: '0.0-2.0',
+            value: 'not awesome',
             label: '0.0-2.0',
         },
         {
             id: v4(),
-            value: '2.0-2.5',
+            value: 'not awesome',
             label: '2.0-2.5',
         },
         {
             id: v4(),
-            value: '2.6-3.0',
+            value: 'not awesome',
             label: '2.6-3.0',
         },
         {
             id: v4(),
-            value: '3.5-4.0',
+            value: 'awesome',
             label: '3.5-4.0',
         },
         {
             id: v4(),
-            value: '4.0+',
+            value: 'awesome',
             label: '4.0+',
         },
     ];
 
     const FAMILY_AFFORDABILITY = [
         {
-            value: '$0-$10k',
+            value: 'not wealthy',
             label: '$0-$10k',
         },
         {
-            value: '$10k-20K',
+            value: 'not wealthy',
             label: '$10k-20K',
         },
         {
-            value: '$20K-$40',
+            value: 'wealthy',
             label: '$20K-$40',
         },
         {
-            value: '$40+',
+            value: 'wealthy',
             label: '$40+',
         },
     ];
@@ -77,7 +79,7 @@
             items: GPA,
             text: 'What’s your GPA?',
             placeholder: 'Select GPA',
-            value: '',
+            value: $gpa,
         },
         {
             id: v4(),
@@ -85,7 +87,7 @@
             items: FAMILY_AFFORDABILITY,
             text: 'How much can your family afford for college?',
             placeholder: 'Select amount',
-            value: '',
+            value: $affordability,
 
         },
     ];
@@ -107,10 +109,12 @@
                         {items}
                         {placeholder}
                         on:select={({detail}) => {
-            if (name === 'state'){
-              $state = detail.value
-            }
-          }}
+                                        if (name === 'state'){
+                                            $state = detail.value
+                                        } else if(name === 'gpa'){
+                                            $gpa = detail.value
+                                        }
+                                      }}
                 />
             </div>
         {/each}

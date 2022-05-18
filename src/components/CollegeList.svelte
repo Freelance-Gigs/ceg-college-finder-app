@@ -17,7 +17,6 @@
     await loadCollegesMatchingInterests($interests)
 
     colleges = [...$collegesMatchingState, ...$collegesMatchingInterests];
-    console.log(colleges)
     loading = false;
   });
 

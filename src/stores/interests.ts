@@ -12,15 +12,24 @@ export const loadCollegesMatchingInterests = async (interests: string[]): Promis
         return previousValue ? `${previousValue},{List Name}="${currentValue}"` : `{List Name}="${currentValue}"`
     }, '')
 
-    const records = await COLLEGE_INTERESTS_TABLE.select({
-        filterByFormula: `OR(${interestsAsExpressions})`
-    }).firstPage();
+    let colleges: AirtableField[] = []
 
     const filterOutInterests = (college: AirtableField) => interests.every((interest) => college !== interest)
 
-    const colleges = records
-        .map(({fields}) => Object.values(fields).filter((college) => filterOutInterests(college)))
+    COLLEGE_INTERESTS_TABLE.select({
+        filterByFormula: `OR(${interestsAsExpressions})`
+    }).eachPage(function page(records, fetchNextPage) {
+        const fetched = records.map(({fields}) => Object.values(fields).filter((college) => filterOutInterests(college)));
+        colleges = colleges.concat(fetched);
+        fetchNextPage();
 
+    }, function done(err) {
+        console.log('interests', flatten(colleges))
+        collegesMatchingInterests.set(flatten(colleges))
+        if (err) {
+            console.error(err);
+            return;
+        }
+    });
 
-    collegesMatchingInterests.set(flatten(colleges))
 }
