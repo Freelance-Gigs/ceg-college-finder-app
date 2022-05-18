@@ -66,10 +66,16 @@ export const combinedList = derived([collegesMatchingState, collegesMatchingInte
 
 export const collegesMap = derived([initialColleges, state, gpa, affordability],
     ([$initialColleges, $state, $gpa, $affordability]): CollegesMap => {
+        isPending.set(true)
+
 
     // @ts-ignore
-        return $initialColleges.reduce((previousValue,currentValue) => {
+        return $initialColleges.reduce((previousValue,currentValue, currentIndex) => {
         const {name, type, state, acceptance = 0} = currentValue
+
+            if(currentIndex >= 846){
+                isPending.set(false)
+            }
 
         let color: 'red' | 'yellow' | 'green'= 'yellow';
 
