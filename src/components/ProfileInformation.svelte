@@ -1,68 +1,15 @@
 <script lang='ts'>
-    import states from 'states-us';
     import Select from 'svelte-select';
     import { v4 } from 'uuid';
     import Button from './UI/Button.svelte';
     import { getContext } from 'svelte';
+    // @ts-ignore
     import { STEPS } from './UI/Steps.svelte';
-    import { state } from '../stores/state';
-    import {gpa} from "../stores/gpa";
-    import {affordability} from "../stores/affordability";
+    import {state, loadCollegesMatchingState, STATES} from '../stores/state';
+    import {GPA, gpa} from "../stores/gpa";
+    import {affordability, FAMILY_AFFORDABILITY} from "../stores/affordability";
 
     const { nextStep } = getContext(STEPS);
-
-    const STATES = states.map(({ abbreviation, name }) => ({
-        id: v4(),
-        value: abbreviation,
-        label: `${abbreviation} - ${name}`,
-    }));
-
-    const GPA = [
-        {
-            id: v4(),
-            value: 'not awesome',
-            label: '0.0-2.0',
-        },
-        {
-            id: v4(),
-            value: 'not awesome',
-            label: '2.0-2.5',
-        },
-        {
-            id: v4(),
-            value: 'not awesome',
-            label: '2.6-3.0',
-        },
-        {
-            id: v4(),
-            value: 'awesome',
-            label: '3.5-4.0',
-        },
-        {
-            id: v4(),
-            value: 'awesome',
-            label: '4.0+',
-        },
-    ];
-
-    const FAMILY_AFFORDABILITY = [
-        {
-            value: 'not wealthy',
-            label: '$0-$10k',
-        },
-        {
-            value: 'not wealthy',
-            label: '$10k-20K',
-        },
-        {
-            value: 'wealthy',
-            label: '$20K-$40',
-        },
-        {
-            value: 'wealthy',
-            label: '$40+',
-        },
-    ];
 
     const INPUTS = [
         {
@@ -71,7 +18,7 @@
             items: STATES,
             text: 'Which state do you live in?',
             placeholder: 'Select state',
-            value: $state,
+            value: '',
         },
         {
             id: v4(),
@@ -79,7 +26,7 @@
             items: GPA,
             text: 'What’s your GPA?',
             placeholder: 'Select GPA',
-            value: $gpa,
+            value: '',
         },
         {
             id: v4(),
@@ -87,11 +34,10 @@
             items: FAMILY_AFFORDABILITY,
             text: 'How much can your family afford for college?',
             placeholder: 'Select amount',
-            value: $affordability,
+            value: '',
 
         },
     ];
-
 </script>
 
 
@@ -110,9 +56,11 @@
                         {placeholder}
                         on:select={({detail}) => {
                                         if (name === 'state'){
-                                            $state = detail.value
-                                        } else if(name === 'gpa'){
-                                            $gpa = detail.value
+                                            $state = detail
+                                        } else if(name === 'GPA'){
+                                            $gpa = detail
+                                        }  else {
+                                            $affordability = detail
                                         }
                                       }}
                 />
@@ -121,7 +69,10 @@
     </section>
 
     <div class='flex flex-row-reverse mx-6 mb-6'>
-        <Button on:click={nextStep}>
+        <Button on:click={async () => {
+            await loadCollegesMatchingState($state.value)
+            nextStep()
+        }}>
             Next step
         </Button>
     </div>

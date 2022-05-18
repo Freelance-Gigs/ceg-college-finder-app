@@ -1,24 +1,15 @@
-<script>
+<script lang='ts'>
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
   import {onMount} from 'svelte';
   import {orderBy} from 'lodash';
-  import {frequencies} from 'underscore-contrib';
+  // @ts-ignore
   import SvelteTable from "svelte-table";
   import Button from './UI/Button.svelte';
   import {goto} from '$app/navigation';
-  import {collegesMatchingState, loadCollegesMatchingState, state} from "../stores/state";
-  import {loadCollegesMatchingInterests, interests, collegesMatchingInterests} from "../stores/interests";
+  import {collegesMap, combinedList, isPending, loadAllColleges} from "../stores/collegeList";
 
-  let loading = true;
-  let colleges = [];
 
-  onMount(async () => {
-    await loadCollegesMatchingState($state)
-    await loadCollegesMatchingInterests($interests)
-
-    colleges = [...$collegesMatchingState, ...$collegesMatchingInterests];
-    loading = false;
-  });
+  onMount(loadAllColleges)
 
   const columns = [
     {
@@ -42,12 +33,7 @@
     }
   ];
 
-  $: collegesMap = frequencies(colleges);
-  $: data = Object.keys(collegesMap).map((key) => ({
-    colleges: key,
-    num_of_lists: collegesMap[key],
-  }));
-  $: rows = orderBy(data, ['num_of_lists'], ['desc']).map((row, index) => ({
+  $: rows = orderBy($combinedList, ['num_of_lists'], ['desc']).map((row, index) => ({
     index: index + 1,
     ...row
   }))
@@ -58,7 +44,7 @@
     Learn which colleges rate highly based on your interests
   </h2>
 
-  {#if loading}
+  {#if $isPending}
     <LoadingSpinner />
   {:else}
     <section class="w-1/2 overflow-auto m-6 mx-auto p-0 bg-white shadow-2xl rounded-md">

@@ -1,14 +1,17 @@
 <script lang='ts'>
   import { COLLEGE_INTERESTS_TABLE } from '../api/airtable';
   import { Records } from 'airtable';
+  // @ts-ignore
   import Checkbox from 'svelte-checkbox';
   import Button from './UI/Button.svelte';
   import { getContext } from 'svelte';
+  // @ts-ignore
   import { STEPS } from './UI/Steps.svelte';
-  import { interests } from '../stores/interests';
+  import { interests, loadCollegesMatchingInterests } from '../stores/interests';
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
 
   const { nextStep } = getContext(STEPS);
+  // @ts-ignore
   const fetchInterests: Promise<Records<TFields>> = COLLEGE_INTERESTS_TABLE.select({
     fields: ['List Name'],
     sort: [{ field: 'List Name', direction: 'asc' }],
@@ -45,7 +48,10 @@
       {/each}
     </div>
     <div class='flex flex-row-reverse mx-6 mb-6'>
-      <Button on:click={() => nextStep()}>
+      <Button on:click={async () => {
+        await loadCollegesMatchingInterests($interests)
+        nextStep()
+      }}>
         Next step
       </Button>
     </div>

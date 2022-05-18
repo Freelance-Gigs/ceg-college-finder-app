@@ -4,7 +4,7 @@ import { COLLEGE_INTERESTS_TABLE} from "../api/airtable";
 import {flatten} from "lodash";
 
 
-export const interests = writable(['Astronomy', "Science"]);
+export const interests = writable<string[]>([]);
 export const collegesMatchingInterests = writable<AirtableField[]>([])
 
 export const loadCollegesMatchingInterests = async (interests: string[]): Promise<void> => {
@@ -19,17 +19,20 @@ export const loadCollegesMatchingInterests = async (interests: string[]): Promis
     COLLEGE_INTERESTS_TABLE.select({
         filterByFormula: `OR(${interestsAsExpressions})`
     }).eachPage(function page(records, fetchNextPage) {
-        const fetched = records.map(({fields}) => Object.values(fields).filter((college) => filterOutInterests(college)));
+
+        const fetched = records.map(({fields}) =>
+            Object.values(fields).filter((college) => filterOutInterests(college))) as AirtableField[];
+
         colleges = colleges.concat(fetched);
         fetchNextPage();
 
     }, function done(err) {
-        console.log('interests', flatten(colleges))
-        collegesMatchingInterests.set(flatten(colleges))
+        const flattened = flatten(colleges as Array<any>) as AirtableField[]
+        collegesMatchingInterests.set(flattened)
+
         if (err) {
             console.error(err);
             return;
         }
     });
-
 }
