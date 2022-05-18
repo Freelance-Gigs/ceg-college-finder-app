@@ -3,7 +3,7 @@ import {COLLEGE_DETAILS_TABLE} from "../api/airtable";
 import type {AirtableField} from "../types/airtable";
 import type {ProfileInfo} from "../types/profileInfo";
 import {v4} from "uuid";
-import states from "states-us";
+import states from "states-us/dist";
 
 export const state = writable<ProfileInfo>({});
 
