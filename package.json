@@ -39,6 +39,7 @@
   "type": "module",
   "dependencies": {
     "airtable": "^0.11.3",
+    "axios": "^1.6.8",
     "lodash": "^4.17.21",
     "states-us": "^1.0.1",
     "svelte-select": "^4.4.7",

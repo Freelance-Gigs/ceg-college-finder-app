@@ -1,67 +1,98 @@
 <script lang='ts'>
-  import { COLLEGE_INTERESTS_TABLE } from '../api/airtable';
-  import { Records } from 'airtable';
-  // @ts-ignore
-  import Checkbox from 'svelte-checkbox';
-  import Button from './UI/Button.svelte';
-  import { getContext } from 'svelte';
-  // @ts-ignore
-  import { STEPS } from './UI/Steps.svelte';
-  import { interests, loadCollegesMatchingInterests } from '../stores/interests';
-  import LoadingSpinner from './UI/LoadingSpinner.svelte';
-  import {goto} from "$app/navigation";
+	import Button from './UI/Button.svelte';
+	import { getContext } from 'svelte';
+	import { STEPS } from './UI/Steps.svelte';
+	import { interests } from '../stores/interests';
 
-  const { nextStep, prevStep } = getContext(STEPS);
-  // @ts-ignore
-  const fetchInterests: Promise<Records<TFields>> = COLLEGE_INTERESTS_TABLE.select({
-    fields: ['List Name'],
-    sort: [{ field: 'List Name', direction: 'asc' }],
-  }).firstPage();
+	// @ts-ignore
+	import Checkbox from 'svelte-checkbox';
 
+	const { nextStep } = getContext(STEPS) as any;
+	const categories = ['Super Important', 'Want it', 'Don’t Care', 'No way!'];
 </script>
 
 <main>
-  <h2 class='text-3xl text-center font-extrabold tracking-tight text-gray-900 my-8'>
-    Select your college interests.
-  </h2>
-  {#await fetchInterests}
-    <LoadingSpinner />
-  {:then records}
-    <div class='grid grid-cols-3 mx-40 gap-4 pt-8 mb-16 text-md'>
-      {#each records.map((record) => record.get('List Name')) as interest}
-        <div class='flex align-middle gap-2'>
-          <Checkbox
-            size='1.3rem'
-            primaryColor='#ff8f38'
-            secondaryColor='hsl(0, 0%, 12%)'
-            on:change='{({detail}) => {
-              if(detail){
-                $interests.push(interest)
-              }else{
-                $interests = $interests.filter((value) => value !== interest)
-              }
-            }}'
-          />
-          <span>
-            {interest}
-          </span>
-        </div>
-      {/each}
-    </div>
+	<h2 class='text-3xl text-center font-extrabold tracking-tight text-gray-900 my-8'>
+		Select your college interests.
+	</h2>
+	<p class='text-center text-gray-600 mb-8 max-w-[80%] mx-auto'>
+		Select the category that best describes your interest in each item. Selecting multiple categories will only save the
+		last one selected. First deselect the previous category before selecting a new one.
+	</p>
+	<div class='flex justify-end gap-2 mx-auto mb-6 max-w-[80%]'>
+		<Button on:click={async () => nextStep()}>
+			Next step
+		</Button>
+	</div>
 
-    <div class='flex justify-between gap-2 mx-6 mb-6'>
-      <Button secondary on:click={() => goto('/')}>
-        Prev step
-      </Button>
-      <Button on:click={async () => {
-        await loadCollegesMatchingInterests($interests)
-        nextStep()
-      }}>
-        Next step
-      </Button>
-    </div>
-  {:catch error}
-    <p>Something went wrong: {error.message}</p>
-  {/await}
+
+	<div class="table-container">
+
+		<table>
+			<thead>
+			<tr>
+				<th>Category</th>
+				<th>Super Important</th>
+				<th>Want it</th>
+				<th>Don’t Care</th>
+				<th>No way!</th>
+			</tr>
+			</thead>
+			<tbody>
+			{#each $interests as { label, preference }, index }
+				<tr>
+					<td>{label}</td>
+					{#each categories as category}
+						<td>
+							<Checkbox
+								size='1.3rem'
+								primaryColor='#ff8f38'
+								secondaryColor='hsl(0, 0%, 12%)'
+								checked={preference === category}
+								on:change={() => {
+                                        $interests[index].preference = category;
+                                        $interests = $interests;
+                                    }}
+							/>
+						</td>
+					{/each}
+				</tr>
+			{/each}
+			</tbody>
+		</table>
+	</div>
 </main>
 
+<style>
+    .table-container {
+        width: 80%;
+        margin: 0 auto;
+        overflow-y: auto;
+        max-height: 600px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    thead th {
+        background-color: #f4f4f4;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+				color: black !important;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    tbody tr:last-child td {
+        border-bottom: 0;
+    }
+</style>

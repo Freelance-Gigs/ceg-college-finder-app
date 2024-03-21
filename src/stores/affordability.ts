@@ -6,19 +6,19 @@ export const affordability = writable<ProfileInfo>({});
 
 export const FAMILY_AFFORDABILITY = [
     {
-        value: 'not wealthy',
+        value: '$0-$10k',
         label: '$0-$10k',
     },
     {
-        value: 'not wealthy',
+        value: '$10k-20K',
         label: '$10k-20K',
     },
     {
-        value: 'wealthy',
+        value: '$20K-$40',
         label: '$20K-$40',
     },
     {
-        value: 'wealthy',
+        value: '$40K+',
         label: '$40K+',
     },
 ];
